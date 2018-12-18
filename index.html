@@ -1,0 +1,3784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>阴阳师</title>
+	<link rel="stylesheet" type="text/css" href="css/index.css">
+	<script src="js/anim.js"></script>
+	<script src="js/jquery.min.js"></script>
+	<script>
+		//鼠标卷曲
+		window.onscroll = function (){
+			var header = anim(".header").offsetHeight;
+			var n = document.documentElement.scrollTop;
+			//拿到header高度，
+			if (n >= header) {
+				anim(".header").style.position = "fixed";
+			}
+			if(n < header){
+				anim(".header").style.position = 'relative';
+			}
+		}
+		//banner内的tab切换
+		window.onload = function (){
+			$(".banner_head li").click(function(){
+				// 给它一个下标
+				var i = $(this).index();
+				$(this).addClass("select").siblings().removeClass("select");
+				$(".box .boxli").eq(i).show().siblings().hide();
+			})
+		}
+		//banner内的轮播图
+		$(function(){
+			var width = 1021;
+			var n = 0;
+			var li = $(".banner_ul>a").length;
+			console.log(li);
+			var m=$(".banner_ul").left;
+			$(".fl_btn").css({'display':'none'})
+			$(".fr_btn").click(function(){
+				n++;
+				if ( n <= 2) {
+					if (n == 2) { //当它的下标为最后一张时，将下一批按钮隐藏
+						$(".fr_btn").hide()
+					}
+			    }else{
+			    	n=0;
+			    }
+			    $(".fl_btn").show();
+				$(".banner_ul").animate({
+					left: -(n *width) + "px"
+				});
+			});
+			$(".fl_btn").click(function(){
+				n--;
+				if( n > 0) {
+					$(".fr_btn").show()
+				}else if( n == 0 ){
+					$(".fl_btn").hide()
+				}
+				$(".banner_ul").animate({
+						left:( li - n*width)
+				})
+			})
+			//自动播放
+			var timeID = setInterval(function(){
+				n++;
+				if ( n <= 2) {
+					if (n == 2) { //当它的下标为最后一张时，将下一批按钮隐藏
+						$(".fr_btn").hide()
+					}
+			    }else{
+			    	n=0;
+			    }
+			    $(".fl_btn").show();
+				$(".banner_ul").animate({
+					left: -(n *width) + "px"
+				});
+			},3000)
+			$(".banner_box").mouseenter(function(){
+				clearInterval(timeID); //清理自动播放
+			})
+			$(".banner_box").mouseleave(function(){
+				//上面清理过自动播放，下面需要重新设置
+				timeID = setInterval(function(){
+					n++;
+					if ( n <= li - 1) {
+					    $(".fl_btn").show();
+						$(".banner_ul").animate({
+							left: -(n *width) + "px"
+						});
+						if (n == li-1) { //当它的下标为最后一张时，将下一批按钮隐藏
+							$(".fr_btn").hide()
+						}
+				    }else{
+				    	n=0;
+				    	$(".banner_ul").animate({
+							left: -(n *width) + "px"
+						});
+				    }
+				},3000);
+			})
+			//banner图中会动的小箭头
+
+			$(".banner_li2").mouseenter(function(){
+				var li2_span = $('.banner_li2').find('.banner_li2-span');
+				li2_span.animate({marginLeft:'140px'},'0.0001s');
+				li2_span.animate({marginLeft:'160px'},'0.0001s');
+				li2_span.animate({marginLeft:'150px'},'0.0001s');
+				li2_span.animate({marginLeft:'160px'},'0.0001s');
+			})
+			$(".banner_ul").children().mouseenter(function(){
+				var li2_span = $('.banner_li2-span');
+				li2_span.css({
+					marginLeft:'150px'
+				});
+			})
+		})
+		//式神列表
+		$(function(){
+			$(".tab_nav2_ul a").click(function(){
+				var i = $(this).index();
+				$(this).addClass("fist_a").siblings().removeClass("fist_a");
+				$('.tab_list .divli').eq(i).show().siblings().hide();
+			})
+			//全部式神列表的轮播图
+			shuffling(1060,$('.tab_ul2'),$('.tab_ul2 ul'),$('.tab_list_box .btn_a_fl'),$('.tab_list_box .btn_a_fr'))
+			//SR全部式神列表的轮播图
+			shuffling(1060,$('.tab_ul3'),$('.tab_ul3 ul'),$('.tab_list_box1 .btn_a_fl'),$('.tab_list_box1 .btn_a_fr'))
+			//R全部式神列表的轮播图
+			shuffling(1060,$('.tab_ul4'),$('.tab_ul4 ul'),$('.tab_list_box2 .btn_a_fl'),$('.tab_list_box2 .btn_a_fr'))
+			//全部式神列表的轮播图为封装的源码
+			// var width = 1060;
+			// var n = 0;
+			// var ul = $('.tab_ul2');
+			// var liList = $('.tab_ul2 ul').length;
+			// var fl_btn = $('.tab_list_box .btn_a_fl');
+			// var fr_btn = $('.tab_list_box .btn_a_fr');
+			// fl_btn.css({'display':'none'})
+			// fr_btn.click(function(){
+			// 	n++;
+			// 	if (n <= liList-1) {
+			// 		fl_btn.show();
+			// 		ul.animate({ //移动盒子ul的位置
+			// 			left: - (width * n) + "px"
+			// 		})
+			// 		if (n == liList - 1) { //当它为最后一张时向右箭头隐藏
+			// 			fr_btn.hide();
+			// 		}
+			// 	}else{
+			// 		n = 0;
+			// 	}
+			// })
+			// fl_btn.click(function(){
+			// 	n--;
+			// 	if ( n > 0) {
+			// 		fr_btn.show()
+			// 	}else if( n == 0){
+			// 		fl_btn.hide()
+			// 	}
+			// 	ul.animate({
+			// 		left:(liList - n * width)
+			// 	})
+			// })
+
+			//封装函数
+			function shuffling(width,ul,li,fl_btn,fr_btn){
+				var n = 0;
+				var liList = li.length;
+				fl_btn.css({'display':'none'})
+				fr_btn.click(function(){
+					n++;
+					if (n <= liList-1) {
+						fl_btn.show();
+						ul.animate({ //移动盒子ul的位置
+							left: - (width * n) + "px"
+						})
+						if (n == liList - 1) { //当它为最后一张时向右箭头隐藏
+							fr_btn.hide();
+						}
+					}else{
+						n = 0;
+					}
+				})
+				fl_btn.click(function(){
+					n--;
+					if ( n > 0) {
+						fr_btn.show()
+					}else if( n == 0){
+						fl_btn.hide()
+					}
+					ul.animate({
+						left:(liList - n * width)
+					})
+				})                                                                        
+			}
+		})
+		//式神录
+		$(function(){
+			$('.list').click(function(){
+				$('.tab_nav2').css({'display':'block'});
+				$('.jigeng').css({'display':'none'});
+			})
+			//tab式神录切换
+			$(".tab_nav li").click(function(){
+				// 给它一个下标
+				var i = $(this).index();
+				$(this).addClass("first_li").siblings().removeClass("first_li");
+				$(".tab_nav3 .divli1").eq(i).show().siblings().hide();
+				$('.tab_nav2').css({'display':'none'});
+			})
+			//游戏攻略tab切换
+			$(".ul3 li").mouseenter(function(){
+				// 给它一个下标
+				var i = $(this).index();
+				$(this).addClass("game_li").siblings().removeClass("game_li");
+				$(".game_main ul").eq(i).show().siblings().hide();
+			})
+			//同热手账
+			$('.box_num span').click(function(){
+				var i = $(this).index();
+				$(this).addClass('spanColor').siblings().removeClass('spanColor');
+				//tab渐隐渐显
+				$('.box_bb a').fadeOut().eq(i).fadeIn();
+			})
+			function timeID2(){
+				i++;
+				$('.box_num span').eq(i).addClass('spanColor').siblings().removeClass('spanColor');
+				//tab渐隐渐显
+				$('.box_bb a').fadeOut().eq(i).fadeIn();
+				if (i == 2) {
+					i = -1;
+				}
+			}
+			var timer = null;
+			var i = 0;
+			timer = setInterval(timeID2,3000);
+			$('.fl_box').mouseenter(function(){
+				clearInterval(timer);
+			});
+			$('.fl_box').mouseleave(function(){
+				timer = setInterval(timeID2,1000);
+			});
+		})
+		//视听盛宴箭头
+		$(function(){
+			$(".fan3_a1").mouseenter(function(){
+				var fan3_i = $('.fan3_a1 i');
+				fan3_i.animate({marginLeft:'10px'},'fast');
+				fan3_i.animate({marginLeft:'20px'},'fast');
+				fan3_i.animate({marginLeft:'10px'},'fast');
+				fan3_i.animate({marginLeft:'20px'},'fast');
+			})
+		})
+	</script>
+</head>
+<body>
+	<!-- header导航 -->
+	<div class="header">
+		<div class="bx ">	
+			<ul class="nav_head clear">
+				<li class="first_li">
+					<a href="#">官网首页
+					</a>
+				</li>
+				<li>
+					<a href="#">新闻资讯
+					</a>
+					<div class="sx_nav sx_nav1">
+						<dl class="bx clear">
+							<dt class="dt">
+								<a href="#">
+									<img src="images/nav1.jpg" alt="">
+									<span>新闻</span>
+									<p>长刀舞 战风起《阴阳师》妖刀姬新装登场！</p>
+								</a>
+							</dt>
+							<dt class="dt">
+								<a href="#">
+									<img src="images/nav2.jpg" alt="">
+									<span>活动</span>
+									<p>《阴阳师》x《易次元》互动阅读作品创作大赛</p>
+								</a>
+							</dt>
+							<dt class="dt">
+								<a href="#">
+									<img src="images/nav3.jpg" alt="">
+									<span>推广</span>
+									<p>时空幻境 回忆之庭 《阴阳师》全新剧情将开启</p>
+								</a>
+							</dt>
+							<dt class="dt">
+								<a href="#">
+									<img src="images/nav4.jpg" alt="">
+									<span>公告</span>
+									<p>《阴阳师》手游10月24日维护更新公告</p>
+								</a>
+							</dt>
+							<dt class="dt">
+								<a href="#">
+									<img src="images/nav5.jpg" alt="">
+									<span>新闻</span>
+									<p>折梦祈月《阴阳师》追月神结界皮肤如约降临！</p>
+								</a>
+							</dt>
+						</dl>
+					</div>
+				</li>
+				<li>
+					<a href="#">式神录</a>
+					<div class="sx_nav sx_nav2">
+						<dl class="bx clear">
+							<dt class="dt">
+								<a href="#">
+									<img src="images/nav6.jpg" alt="">
+									<i class="i">联动</i>
+								</a>
+							</dt>
+							<dt class="dt">
+								<a href="#">
+									<img src="images/7.jpg" alt="">
+									<i class="i">SP</i>
+								</a>
+							</dt>
+							<dt class="dt">
+								<a href="#">
+									<img src="images/8.jpg" alt="">
+									<i class="i">SSR</i>
+								</a>
+							</dt>
+							<dt class="dt">
+								<a href="#">
+									<img src="images/sr.jpg" alt="">
+									<i class="i">SR</i>
+								</a>
+							</dt>
+							<dt class="dt">
+								<a href="#">
+									<img src="images/r.jpg" alt="">
+									<i class="i">R</i>
+								</a>
+							</dt>
+							<dt class="dt">
+								<a href="#">
+									<img src="images/n.jpg" alt="">
+									<i class="i">N</i>
+								</a>
+							</dt>
+							<dt class="dt">
+								<a href="#">
+									<img src="images/gua.jpg" alt="">
+									<i class="i">呱太</i>
+								</a>
+							</dt>
+						</dl>
+					</div>
+				</li>
+				<li>
+					<a href="#">游戏功略</a>
+					<div class="sx_nav sx_nav3">
+						<dl class="bx clear">
+							<dt class="dt">
+								<a href="#">
+									<img src="images/9.jpg" alt="">
+									<i class="i">萌新上路</i>
+								</a>
+							</dt>
+							<dt class="dt">
+								<a href="#">
+									<img src="images/10.jpg" alt="">
+									<i class="i">式神御魂</i>
+								</a>
+							</dt>
+							<dt class="dt">
+								<a href="#">
+									<img src="images/11.jpg" alt="">
+									<i class="i">秘闻副本</i>
+								</a>
+							</dt>
+							<dt class="dt">
+								<a href="#">
+									<img src="images/9.jpg" alt="">
+									<i class="i">斗技阵容</i>
+								</a>
+							</dt>
+						</dl>
+					</div>
+				</li>
+				<li>
+					<a href="#">同人社区</a>
+					<div class="sx_nav sx_nav4">
+						<dl class="bx clear">
+							<dt class="dt fl">
+								<a href="#">
+									<img src="images/tr.jpg" alt="">
+									<em>两周年庆视频征集大赛</em>
+								</a>
+								<a href="#">
+									<img src="images/tr2.jpg" alt="">
+									<em>二周年表情包大赛</em>
+								</a>
+							</dt>
+							<div class="fl fl1">
+								<h4>热门话题</h4>
+								<a href="#">每日精选</a>
+								<i></i>
+								<a href="#">同人绘画</a>
+								<i></i>
+								<a href="#">玩家cos</a>
+								<a href="#">同人视频</a>
+								<i></i>
+								<a href="#">同人小说</a>
+								<i></i>
+								<a href="#">高手在民间</a>
+							</div>
+							<div class="fl fl1 fl2">
+								<h4>热门标签</h4>
+								<a href="#">#桔梗#</a>
+								<a href="#">#嘉年华庆典#</a>
+								<a href="#">#小白#</a>
+								<a href="#">#小晴明#</a>
+							</div>
+						</dl>
+					</div>
+				</li>
+				<li>
+					<a href="#">泛娱乐</a>
+					<div class="sx_nav sx_nav2">
+						<dl class="bx clear">
+							<dt class="dt">
+								<a href="#">
+									<img src="images/1.png" alt="">
+									<i class="i">泡面番：平安物语</i>
+								</a>
+							</dt>
+							<dt class="dt">
+								<a href="#">
+									<img src="images/2.png" alt="">
+									<i class="i">动画：百鬼幼儿园</i>
+								</a>
+							</dt>
+							<dt class="dt">
+								<a href="#">
+									<img src="images/3.png" alt="">
+									<i class="i">音乐剧：平安绘卷</i>
+								</a>
+							</dt>
+							<dt class="dt">
+								<a href="#">
+									<img src="images/4.png" alt="">
+									<i class="i">漫画：官方漫画</i>
+								</a>
+							</dt>
+							<dt class="dt">
+								<a href="#">
+									<img src="images/5.png" alt="">
+									<i class="i">商业街：周边商城</i>
+								</a>
+							</dt>
+							<dt class="dt">
+								<a href="#">
+									<img src="images/6.png" alt="">
+									<i class="i">大事记：线下大事记</i>
+								</a>
+							</dt>
+							<dt class="dt">
+								<a href="#">
+									<img src="images/7.png" alt="">
+									<i class="i">电台：京都放映町</i>
+								</a>
+							</dt>
+						</dl>
+					</div>
+				</li>
+				<li>
+					<a href="#">视听中心</a>
+					<div class="sx_nav sx_nav3">
+						<dl class="bx clear">
+							<dt class="dt">
+								<a href="#">
+									<img src="images/10.jpg" alt="">
+									<i class="i">视频中心</i>
+								</a>
+							</dt>
+							<dt class="dt">
+								<a href="#">
+									<img src="images/11.jpg" alt="">
+									<i class="i">原画壁纸</i>
+								</a>
+							</dt>
+							<dt class="dt">
+								<a href="#">
+									<img src="images/12.jpg" alt="">
+									<i class="i">游戏原声</i>
+								</a>
+							</dt>
+						</dl>
+					</div>
+				</li>
+				<li>
+					<a href="#">周边商城</a>
+				</li>
+				<li>
+					<a href="#">藏宝阁</a>
+				</li>
+				<li>
+					<a href="#">官方渠道</a>
+					<div class="sx_nav sx_nav5">
+						<dl class="bx clear">
+							<dt class="dt">
+								<img src="images/luntan.png">
+								<span>官方论坛</span>
+							</dt>
+							<dt class="dt">
+								<img src="images/tieba.png">
+								<span>官方贴吧</span>
+							</dt>
+							<dt class="dt">
+								<img src="images/qr1.png">
+								<span>官方微博</span>
+							</dt>
+							<dt class="dt">
+								<img src="images/qr1.png">
+								<span>官方微信</span>
+							</dt>
+							<dt class="dt">
+								<img src="images/qr1.png">
+								<span>网易大神</span>
+							</dt>
+							<dd class="fl fl3">
+								<p>204422345（QQ1群已满</p>
+								<p>540687051（QQ2群已满）</p>
+								<p>546653739（QQ3群）</p>
+								<p>344590267（QQ4群）</p>
+								<p>546027375（QQ5群）</p>
+							</dd>
+						</dl>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="banner">
+		<div class="banner_bot">
+			<div class="bx clear">
+				<div class="fl banner_fl">
+					<a href="#" class="qr">
+						<img src="images/qr.png" alt="">
+						<img src="images/line.png" alt="" class="line">
+					</a>
+					<a href="#" title="" class="img1">
+						<img src="images/img1.jpg" alt="">
+					</a>
+				</div>
+				<div class="banner_fr fl">
+					<ul class="banner_head clear">
+						<li class="select">
+							新闻资讯
+							<span></span>
+						</li>
+						<li>
+							新服集结
+							<span></span>
+						</li>
+					</ul>
+					<div class="box clear">
+						<div class="banner_box boxli" style="left: 0; top:0;">
+							<div class="banner_ul">
+								<a href="#" class="banner_li1">
+									<div class="img_box">
+										<img src="images/banner_lunbo1.jpg" alt="">
+										<i>推荐</i>
+									</div>
+									<div class="txt_box">
+										<span>网易CEO丁磊 · </span>
+										<p>秋冬穿搭好物，高达70%OFF</p>
+									</div>
+								</a>
+								<a href="#" class="banner_li2">
+									<h2>新闻  |  长刀舞 战风起《阴阳师》妖刀姬新装登场！</h2>
+									<p>烽火烈烈，四起的狼烟中是厮杀的呼号，飞驰的利箭如瓢泼大雨般落下，遍野哀声中，箭矢折断的声音与刀鸣相织。鲜血飞溅，破空而过的长刀……</p>
+									<span class="banner_li2-span"></span>
+								</a>
+								<a href="#" class="banner_li3">
+									<img src="images/nav2.jpg" alt="">
+									<div class="img_1"></div>
+									<div class="img_border"></div>
+									<p>《阴阳师》x《易次元》互动阅读作品创作大赛</p>
+									<div class="txt_box">
+										活动
+									</div>
+								</a>
+								<a href="#" class="banner_li2">
+									<h2>时空幻境 回忆之庭 《阴阳师》全新剧情活动即将开启！</h2>
+									<p>午后和煦的日光，穿过层叠的枝叶，点点光斑洒落在地上。庭院里式神们都在认真张罗着晚餐。白狼将准备好的美酒摆放在桌上，萤草和童女也……</p>
+									<span class="banner_li2-span"></span>
+								</a>
+								<a href="#" class="banner_li2">
+									<h2>公告  |  《阴阳师》手游10月24日维护更新公告</h2>
+									<p>亲爱的阴阳师大人：为了给大家带来更好的游戏体验，服务器将于10月24日（周三）早上6:30-9:00进行停服维护，如未能按时完成，则开服时间将会顺延。具体更新详情请留意稍后更新公告，或维护结束后至游戏登录界面查看。</p>
+									<span class="banner_li2-span"></span>
+								</a>
+								<a href="#" class="banner_li2">
+									<h2>新闻  |  折梦祈月《阴阳师》追月神结界皮肤如约降临！</h2>
+									<p>秋夜微凉，皓月当空，云烟袅袅飘散却不见点点星辰。追月神在云间穿梭着，时而垂头低眸，望向静默的一方土地：“入眠的人们啊，你们梦中……</p>
+									<span class="banner_li2-span"></span>
+								</a>
+								<a href="#" class="banner_li2">
+									<h2>新闻  |  梦茧化蝶 《阴阳师》全新SR阶式神於菊虫即将降临</h2>
+									<p>温暖日光覆盖下的翠色桑林内，似乎有谁正娓娓讲述着什么。沙沙，沙沙。原来是繁茂的桑树枝头，一群幼虫大口地吞食着桑叶，脸上满是虔诚……</p>
+									<span class="banner_li2-span"></span>
+								</a>
+								<a href="#" class="banner_li2">
+									<h2>新闻  |  《阴阳师》易间联动咖啡馆 妖你共饮绮美时光</h2>
+									<p>10月19日，《阴阳师》与网易易间联手打造的“阴阳师Café”正式开业。此番联动，阴阳师与倡导生活美学的易间合作，将IP内涵融入到咖啡馆室内设计、餐饮和交流互动活动中，落地趣味的式神文化，打造出一个绮美的“食尚”咖啡店。</p>
+									<span class="banner_li2-span"></span>
+								</a>
+								<a href="#" class="banner_li2">
+									<h2>新闻  |  穿越时空 桔梗降临！《阴阳师》X《犬夜叉》联动再启</h2>
+									<p>清冷的月光穿透了黑暗的阻拦，点点幽光在空中游荡开来。熟悉的身影浮现在眼前，随之响起的声音，带着一贯的空灵却又似乎多了几分哀伤……</p>
+									<span class="banner_li2-span"></span>
+								</a>
+								<a href="#" class="banner_li2">
+									<h2>新闻  |  《阴阳师》易间联动咖啡馆 妖你共饮绮美时光</h2>
+									<p>10月19日，《阴阳师》与网易易间联手打造的“阴阳师Café”正式开业。此番联动，阴阳师与倡导生活美学的易间合作，将IP内涵融入到咖啡馆室内设计、餐饮和交流互动活动中，落地趣味的式神文化，打造出一个绮美的“食尚”咖啡店。</p>
+									<span class="banner_li2-span"></span>
+								</a>
+								<a href="#" class="banner_li2">
+									<h2>新闻  |  穿越时空 桔梗降临！《阴阳师》X《犬夜叉》联动再启</h2>
+									<p>清冷的月光穿透了黑暗的阻拦，点点幽光在空中游荡开来。熟悉的身影浮现在眼前，随之响起的声音，带着一贯的空灵却又似乎多了几分哀伤……</p>
+									<span class="banner_li2-span"></span>
+								</a>
+								<a href="#" class="banner_li2">
+									<h2>新闻  |  穿越时空 桔梗降临！《阴阳师》X《犬夜叉》联动再启</h2>
+									<p>清冷的月光穿透了黑暗的阻拦，点点幽光在空中游荡开来。熟悉的身影浮现在眼前，随之响起的声音，带着一贯的空灵却又似乎多了几分哀伤……</p>
+									<span class="banner_li2-span"></span>
+								</a>
+							</div>
+							<div class="btn">
+								<a class="fl_btn">上一批</a>
+								<span class="btn_span"></span>
+								<a class="fr_btn">下一批</a>
+								<a href="" style="color: #fff;"><img src="images/banner_btn.png" class="btn_img">更多</a>
+							</div>
+						</div>
+						<div class="banner_box2 boxli">
+							<div class="box2_fl fl">
+								<p class="p1"></p>
+								<a class="fl_a"></a>
+								<p class="p2">已预约<span>2540907</span>人</p>
+								<span class="box2_span"></span>
+							</div>
+							<div class="box2_fr fl">
+								<div class="box2_fr_bj">
+									<span class="fr_bj_span"></span>
+								</div>
+								<ul class="box2_ul clear">
+									<li>
+										<i class="box2_ul_i"></i>
+										<div class="box2_li">
+											<h3>祝福礼包</h3>
+											<p>预约人数达到100,000，可获得礼包：<<em>神秘的符咒*1，体力*100</em></p>
+										</div>
+										<a class="box2_li_a">
+											<div class="box2_li_img"></div>
+											<span class="box2_li_span"></span>
+										</a>
+										<p class="p1">祝福礼包</p>
+										<p class="p2 clear">
+											<em></em>
+											<span>100,000</span>
+										</p>
+										<span class="line1"></span>
+									</li>
+									<li>
+										<i class="box2_ul_i"></i>
+										<div class="box2_li">
+											<h3>皮肤礼包</h3>
+											<p>预约人数达到300,000，可获得礼包：<<em>神秘的符咒*1，体力*100</em></p>
+										</div>
+										<a class="box2_li_a">
+											<div class="box2_li_img"></div>
+											<span class="box2_li_span"></span>
+										</a>
+										<p class="p1">皮肤礼包</p>
+										<p class="p2">
+											<em></em>
+											<span>500,000</span>
+										</p>
+										<span class="line1"></span>
+									</li>
+									<li>
+										<i class="box2_ul_i"></i>
+										<div class="box2_li">
+											<h3>勾玉礼包</h3>
+											<p>预约人数达到800,000，可获得礼包：<<em>神秘的符咒*1，体力*100</em></p>
+										</div>
+										<a class="box2_li_a">
+											<div class="box2_li_img"></div>
+											<span class="box2_li_span"></span>
+										</a>
+										<p class="p1">勾玉礼包</p>
+										<p class="p2">
+											<em></em>
+											<span>1000,000</span>
+										</p>
+										<span class="line1"></span>
+									</li>
+									<li>
+										<i class="box2_ul_i"></i>
+										<div class="box2_li box2_li2">
+											<h3>神秘符咒</h3>
+											<p>预约人数达到100,000，可获得礼包：<<em>神秘的符咒*1，体力*100</em></p>
+										</div>
+										<a class="box2_li_a">
+											<div class="box2_li_img"></div>
+											<span class="box2_li_span"></span>
+										</a>
+										<p class="p1">神秘符咒</p>
+										<p class="p2">
+											<em></em>
+											<span>800,000</span>
+										</p>
+										<span class="line1"></span>
+									</li>
+									<li>
+										<i class="box2_ul_i"></i>
+										<div class="box2_li box2_li2">
+											<h3>月见之樱	</h3>
+											<p>预约人数达到100,000，可获得礼包：<<em>神秘的符咒*1，体力*100</em></p>
+										</div>
+										<a class="box2_li_a">
+											<div class="box2_li_img"></div>
+											<span class="box2_li_span"></span>
+										</a>
+										<p class="p1">月见之樱</p>
+										<p class="p2">
+											<em></em>
+											<span>1000,000</span>
+										</p>
+										<span class="line1"></span>
+									</li>
+								</ul>
+								<p class="p1">注：全平台互通新区《枫之舞》将于11月7日10:00开启</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 平安世界 -->
+	<div class="bx main">
+		<div class="main_logo"></div>
+		<div class="tab">
+			<!-- 导航 -->
+			<div class="tab_nav">
+				<ul class="ul">
+					<li class="first_li">
+						式神录
+					</li>
+					<li>主教录</li>
+					<li>声优阵</li>
+				</ul>
+			</div>
+			<!-- 全部导航 -->
+			<div class="tab_nav2">
+				<div class="tab_nav2_ul">
+					<a class="fist_a">全部</a>
+					<a>联动</a>
+					<a>SP</a>
+					<a>SSR</a>
+					<a>SR</a>
+					<a>R</a>
+					<a>N</a>
+					<a>呱大</a>
+				</div>
+				<div class="sousuo">
+					<input type="text" value="大天狗">
+					<a class="fl"></a>
+				</div>
+				<div class="tab_list clear">
+					<div class="tab_list_box divli show clear">
+						<div class="tab_ul_box tab_ul2 clear">
+							<ul class="tab_list_ul ">
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main1.png" alt="">
+										<i class="li_i"></i>
+									</a>
+									<p class="li_p">桔梗</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main2.png" alt="">
+										
+									</a>
+									<p class="li_p">白藏主</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main3.png" alt="">
+										
+									</a>
+									<p class="li_p">少羽大天狗</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main4.png" alt="">
+										
+									</a>
+									<p class="li_p">鬼切</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main5.png" alt="">
+										
+									</a>
+									<p class="li_p">杀生丸</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main6.png" alt="">
+										
+									</a>
+									<p class="li_p">犬夜叉</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main7.png" alt="">
+										
+									</a>
+									<p class="li_p">彼岸花呱</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main8.png" alt="">
+										
+									</a>
+									<p class="li_p">荒呱</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main9.png" alt="">
+										
+									</a>
+									<p class="li_p">辉夜姬呱</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main10.png" alt="">
+										
+									</a>
+									<p class="li_p">花鸟卷呱</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main11.png" alt="">
+										
+									</a>
+									<p class="li_p">一目连呱</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main12.png" alt="">
+										
+									</a>
+									<p class="li_p">妖刀姬呱</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main13.png" alt="">
+										
+									</a>
+									<p class="li_p">青行灯呱</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main14.png" alt="">
+										
+									</a>
+									<p class="li_p">茨木呱</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main15.png" alt="">
+										
+									</a>
+									<p class="li_p">小鹿男呱</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main16.png" alt="">
+										
+									</a>
+									<p class="li_p">两面佛呱</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main17.png" alt="">
+										
+									</a>
+									<p class="li_p">阎魔呱</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main18.png" alt="">
+										
+									</a>
+									<p class="li_p">荒川呱</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main19.png" alt="">
+										
+									</a>
+									<p class="li_p">酒吞呱</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main20.png" alt="">
+										
+									</a>
+									<p class="li_p">大天狗呱</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main21.png" alt="">
+										
+									</a>
+									<p class="li_p">面灵气</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main22.png" alt="">
+										
+									</a>
+									<p class="li_p">猫掌柜</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main23.png" alt="">
+										
+									</a>
+									<p class="li_p">蜜桃&芥子</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main24.png" alt="">
+										
+									</a>
+									<p class="li_p">阿香</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main25.png" alt="">
+										
+									</a>
+									<p class="li_p">鬼灯</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main26.png" alt="">
+										
+									</a>
+									<p class="li_p">人面树</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main27.png" alt="">
+										
+									</a>
+									<p class="li_p">卖药郎</p>
+								</li>
+							</ul>
+							<ul class="tab_list_ul">
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main29.png" alt="">
+									</a>
+									<p class="li_p">奴良陆生</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main30.png" alt="">
+									</a>
+									<p class="li_p">山风</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main31.png" alt="">
+									</a>
+									<p class="li_p">薰</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main32.png" alt="">
+									</a>
+									<p class="li_p">虫师</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main33.png" alt="">
+									</a>
+									<p class="li_p">小袖之手</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main34.png" alt="">
+									</a>
+									<p class="li_p">弈</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main35.png" alt="">
+									</a>
+									<p class="li_p">御馔津</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main36.png" alt="">
+									</a>
+									<p class="li_p">日和坊</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main37.png" alt="">
+									</a>
+									<p class="li_p">追月神</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main38.png" alt="">
+									</a>
+									<p class="li_p">数珠</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main39.png" alt="">
+									</a>
+									<p class="li_p">玉藻前</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main40.png" alt="">
+									</a>
+									<p class="li_p">百目鬼</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main41.png" alt="">
+									</a>
+									<p class="li_p">雪童子</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main42.png" alt="">
+									</a>
+									<p class="li_p">书翁</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main43.png" alt="">
+									</a>
+									<p class="li_p">兔丸</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main44.png" alt="">
+									</a>
+									<p class="li_p">小松丸</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main45.png" alt="">
+									</a>
+									<p class="li_p">彼岸花</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main46.png" alt="">
+									</a>
+									<p class="li_p">匣中少女</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main47.png" alt="">
+									</a>
+									<p class="li_p">鸩</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main48.png" alt="">
+									</a>
+									<p class="li_p">以津真天</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main49.png" alt="">
+									</a>
+									<p class="li_p">荒</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main50.png" alt="">
+									</a>
+									<p class="li_p">金鱼姬</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main51.png" alt="">
+									</a>
+									<p class="li_p">万年竹</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main52.png" alt="">	
+									</a>
+									<p class="li_p">青坊主</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main53.png" alt="">	
+									</a>
+									<p class="li_p">古笼火</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main54.png" alt="">
+									</a>
+									<p class="li_p">夜叉</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main55.png" alt="">
+									</a>
+									<p class="li_p">黑童子</p>
+								</li>
+							</ul>
+							<ul class="tab_list_ul">
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main56.png" alt="">
+									</a>
+									<p class="li_p">白童子</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main57.png" alt="">
+									</a>
+									<p class="li_p">花鸟卷</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main58.png" alt="">
+									</a>
+									<p class="li_p">烟烟罗</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main137.png" alt="">
+									</a>
+									<p class="li_p">辉夜姬</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main60.png" alt="">
+									</a>
+									<p class="li_p">桃花妖</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main61.png" alt="">
+									</a>
+									<p class="li_p">雪女</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main62.png" alt="">
+									</a>
+									<p class="li_p">三尾狐</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main63.png" alt="">
+									</a>
+									<p class="li_p">灯笼鬼</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main64.png" alt="">
+									</a>
+									<p class="li_p">座敷童子</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main65.png" alt="">
+									</a>
+									<p class="li_p">鲤鱼精</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main66.png" alt="">
+									</a>
+									<p class="li_p">九命猫</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main67.png" alt="">
+									</a>
+									<p class="li_p">狸猫</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main68.png" alt="">
+									</a>
+									<p class="li_p">河童</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main69.png" alt="">
+									</a>
+									<p class="li_p">鬼使白</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main70.png" alt="">
+									</a>
+									<p class="li_p">鬼使黑</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main71.png" alt="">
+									</a>
+									<p class="li_p">童男</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main72.png" alt="">
+									</a>
+									<p class="li_p">童女</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main73.png" alt="">
+									</a>
+									<p class="li_p">饿鬼</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main74.png" alt="">
+									</a>
+									<p class="li_p">孟婆</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main75.png" alt="">
+									</a>
+									<p class="li_p">巫蛊师</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main76.png" alt="">
+									</a>
+									<p class="li_p">大天狗</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main77.png" alt="">
+									</a>
+									<p class="li_p">鸦天狗</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main78.png" alt="">
+									</a>
+									<p class="li_p">酒吞童子</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main79.png" alt="">	
+									</a>
+									<p class="li_p">犬神</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main53.png" alt="">	
+									</a>
+									<p class="li_p">食发鬼</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main54.png" alt="">
+									</a>
+									<p class="li_p">武士之灵</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main55.png" alt="">
+									</a>
+									<p class="li_p">骨女</p>
+								</li>
+							</ul>
+							<ul class="tab_list_ul">
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main83.png" alt="">
+									</a>
+									<p class="li_p">雨女</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main84.png" alt="">
+									</a>
+									<p class="li_p">跳跳弟弟</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main85.png" alt="">
+									</a>
+									<p class="li_p">跳跳妹妹</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main86.png" alt="">
+									</a>
+									<p class="li_p">兵俑</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main87.png" alt="">
+									</a>
+									<p class="li_p">丑时之女</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main88.png" alt="">
+									</a>
+									<p class="li_p">独眼小僧</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main89.png" alt="">
+									</a>
+									<p class="li_p">鬼女红叶</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main90.png" alt="">
+									</a>
+									<p class="li_p">铁鼠</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main91.png" alt="">
+									</a>
+									<p class="li_p">跳跳哥哥</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main92.png" alt="">
+									</a>
+									<p class="li_p">椒图</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main93.png" alt="">
+									</a>
+									<p class="li_p">管狐</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main94.png" alt="">
+									</a>
+									<p class="li_p">山兔</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main95.png" alt="">
+									</a>
+									<p class="li_p">萤草</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main96.png" alt="">
+									</a>
+									<p class="li_p">蝴蝶精</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main97.png" alt="">
+									</a>
+									<p class="li_p">傀儡师</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main98.png" alt="">
+									</a>
+									<p class="li_p">山童</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main99.png" alt="">
+									</a>
+									<p class="li_p">首无</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main100.png" alt="">
+									</a>
+									<p class="li_p">提灯小僧</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main101.png" alt="">
+									</a>
+									<p class="li_p">赤舌</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main102.png" alt="">
+									</a>
+									<p class="li_p">海坊主</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main103.png" alt="">
+									</a>
+									<p class="li_p">荒川之主</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main104.png" alt="">
+									</a>
+									<p class="li_p">觉</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main105.png" alt="">
+									</a>
+									<p class="li_p">青蛙瓷器</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main106.png" alt="">	
+									</a>
+									<p class="li_p">判官</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main107.png" alt="">	
+									</a>
+									<p class="li_p">凤凰火</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main108.png" alt="">
+									</a>
+									<p class="li_p">吸血姬</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main109.png" alt="">
+									</a>
+									<p class="li_p">妖狐</p>
+								</li>
+							</ul>
+							<ul class="tab_list_ul">
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main110.png" alt="">
+									</a>
+									<p class="li_p">阎魔</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main111.png" alt="">
+									</a>
+									<p class="li_p">妖琴师</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main112.png" alt="">
+									</a>
+									<p class="li_p">食梦貘</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main113.png" alt="">
+									</a>
+									<p class="li_p">两面佛</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main114.png" alt="">
+									</a>
+									<p class="li_p">小鹿男</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main115.png" alt="">
+									</a>
+									<p class="li_p">清姬</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main116.png" alt="">
+									</a>
+									<p class="li_p">镰鼬</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main117.png" alt="">
+									</a>
+									<p class="li_p">姑获鸟</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main118.png" alt="">
+									</a>
+									<p class="li_p">二口女</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main119.png" alt="">
+									</a>
+									<p class="li_p">白狼</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main120.png" alt="">
+									</a>
+									<p class="li_p">茨木童子</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main121.png" alt="">
+									</a>
+									<p class="li_p">青行灯</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main122.png" alt="">
+									</a>
+									<p class="li_p">樱花妖</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main123.png" alt="">
+									</a>
+									<p class="li_p">惠比寿</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main124.png" alt="">
+									</a>
+									<p class="li_p">妖刀姬</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main125.png" alt="">
+									</a>
+									<p class="li_p">络新妇</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main126.png" alt="">
+									</a>
+									<p class="li_p">盗墓小鬼</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main127.png" alt="">
+									</a>
+									<p class="li_p">寄生魂</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main128.png" alt="">
+									</a>
+									<p class="li_p">唐纸伞妖</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main129.png" alt="">
+									</a>
+									<p class="li_p">天邪鬼绿</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main130.png" alt="">
+									</a>
+									<p class="li_p">天邪鬼赤</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main131.png" alt="">
+									</a>
+									<p class="li_p">天邪鬼黄</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main132.png" alt="">
+									</a>
+									<p class="li_p">天邪鬼青</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main133.png" alt="">	
+									</a>
+									<p class="li_p">帚神</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main134.png" alt="">	
+									</a>
+									<p class="li_p">涂壁</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main136.png" alt="">
+									</a>
+									<p class="li_p">一目连</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main137.png" alt="">
+									</a>
+									<p class="li_p">般若</p>
+								</li>
+							</ul>
+						</div>
+						<div class="tab_btn clear">
+							<a class="btn_a_fl">
+								<i class="btn_fl_i"></i>
+							</a>
+							<a class="btn_a_fr">
+								<i class="btn__fr_i"></i>
+							</a>
+						</div>
+					</div>
+					<div class="tab_ul_box divli">
+						<ul class="tab_list_ul" style="float: left">
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main6.png" alt="">
+									</a>
+									<p class="li_p">犬夜叉</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main23.png" alt="">
+									</a>
+									<p class="li_p">蜜桃&芥子</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main24.png" alt="">
+									</a>
+									<p class="li_p">阿香</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main25.png" alt="">
+									</a>
+									<p class="li_p">鬼灯</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main27.png" alt="">
+									</a>
+									<p class="li_p">卖药郎</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main28.png" alt="">
+									</a>
+									<p class="li_p">奴良陆生</p>
+								</li>
+						</ul>
+					</div>
+					<div class="tab_ul_box divli">
+						<ul class="tab_list_ul" style="float: left">
+							<li>
+								<a>
+									<span class="li_span"></span>
+									<img src="images/main_images/main4.png" alt="">
+								</a>
+								<p class="li_p">少羽大天狗</p>
+							</li>
+						</ul>
+					</div>
+					<div class="tab_ul_box divli">
+						<ul class="tab_list_ul" style="float: left">
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main1.png" alt="">
+										<i class="li_i"></i>
+									</a>
+									<p class="li_p">桔梗</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main2.png" alt="">
+										
+									</a>
+									<p class="li_p">白藏主</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main4.png" alt="">
+										
+									</a>
+									<p class="li_p">鬼切</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main21.png" alt="">
+										
+									</a>
+									<p class="li_p">面灵气</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main30.png" alt="">
+										
+									</a>
+									<p class="li_p">山风</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main35.png" alt="">
+										
+									</a>
+									<p class="li_p">御馔津</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main39.png" alt="">
+										
+									</a>
+									<p class="li_p">玉藻前</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main41.png" alt="">
+										
+									</a>
+									<p class="li_p">雪童子</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main45.png" alt="">
+										
+									</a>
+									<p class="li_p">彼岸花</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main49.png" alt="">
+										
+									</a>
+									<p class="li_p">荒</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main57.png" alt="">
+										
+									</a>
+									<p class="li_p">花鸟卷</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main137.png" alt="">
+										
+									</a>
+									<p class="li_p">辉夜姬</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main76.png" alt="">
+										
+									</a>
+									<p class="li_p">大天狗</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main78.png" alt="">
+										
+									</a>
+									<p class="li_p">酒吞童子</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main103.png" alt="">
+										
+									</a>
+									<p class="li_p">荒川之主</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main110.png" alt="">
+									
+									</a>
+									<p class="li_p">阎魔</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main113.png" alt="">
+										
+									</a>
+									<p class="li_p">两面佛</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main114.png" alt="">
+										
+									</a>
+									<p class="li_p">小鹿男</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main120.png" alt="">
+										
+									</a>
+									<p class="li_p">茨木童子</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main121.png" alt="">
+										
+									</a>
+									<p class="li_p">青行灯</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main124.png" alt="">
+										
+									</a>
+									<p class="li_p">妖刀姬</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main127.png" alt="">
+										
+									</a>
+									<p class="li_p">一目连</p>
+								</li>	
+							</ul>
+					</div>
+					<div class="tab_list_box1 tab_ul_box divli">
+						<div class="tab_ul_box tab_ul3 clear">
+							<ul class="tab_list_ul ">
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main2.png" alt="">
+									</a>
+									<p class="li_p">人面树</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main23.png" alt="">
+										
+									</a>
+									<p class="li_p">猫掌柜</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main31.png" alt="">
+										
+									</a>
+									<p class="li_p">薰</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main34.png" alt="">
+										
+									</a>
+									<p class="li_p">弈</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main36.png" alt="">
+										
+									</a>
+									<p class="li_p">日和坊</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main37.png" alt="">
+										
+									</a>
+									<p class="li_p">追月神</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main40.png" alt="">
+										
+									</a>
+									<p class="li_p">百目鬼</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main42.png" alt="">
+										
+									</a>
+									<p class="li_p">书翁</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main44.png" alt="">
+										
+									</a>
+									<p class="li_p">小松丸</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main46.png" alt="">
+										
+									</a>
+									<p class="li_p">匣中少女</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main47.png" alt="">
+										
+									</a>
+									<p class="li_p">鸩</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main48.png" alt="">
+										
+									</a>
+									<p class="li_p">以津真天</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main50.png" alt="">
+										
+									</a>
+									<p class="li_p">金鱼姬</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main51.png" alt="">
+										
+									</a>
+									<p class="li_p">万年竹</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main52.png" alt="">
+										
+									</a>
+									<p class="li_p">青坊主</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main54.png" alt="">
+										
+									</a>
+									<p class="li_p">夜叉</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main55.png" alt="">
+										
+									</a>
+									<p class="li_p">黑童子</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main56.png" alt="">
+										
+									</a>
+									<p class="li_p">白童子</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main58.png" alt="">
+										
+									</a>
+									<p class="li_p">烟烟罗</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main60.png" alt="">
+										
+									</a>
+									<p class="li_p">桃花妖</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main61.png" alt="">
+										
+									</a>
+									<p class="li_p">雪女</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main69.png" alt="">
+										
+									</a>
+									<p class="li_p">鬼使白</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main70.png" alt="">
+										
+									</a>
+									<p class="li_p">鬼使黑</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main74.png" alt="">
+										
+									</a>
+									<p class="li_p">孟婆</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main79.png" alt="">
+										
+									</a>
+									<p class="li_p">犬神</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main82.png" alt="">
+										
+									</a>
+									<p class="li_p">骨女</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main89.png" alt="">
+										
+									</a>
+									<p class="li_p">鬼女红叶</p>
+								</li>
+							</ul>
+							<ul class="tab_list_ul">
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main91.png" alt="">
+									</a>
+									<p class="li_p">跳跳哥哥</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main97.png" alt="">
+									</a>
+									<p class="li_p">傀儡师</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main102.png" alt="">
+									</a>
+									<p class="li_p">海坊主</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main106.png" alt="">
+									</a>
+									<p class="li_p">判官</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main107.png" alt="">
+									</a>
+									<p class="li_p">凤凰火</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main108.png" alt="">
+									</a>
+									<p class="li_p">吸血姬</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main109.png" alt="">
+									</a>
+									<p class="li_p">妖狐</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main111.png" alt="">
+									</a>
+									<p class="li_p">妖琴师</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main112.png" alt="">
+									</a>
+									<p class="li_p">食梦貘</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main115.png" alt="">
+									</a>
+									<p class="li_p">清姬</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main116.png" alt="">
+									</a>
+									<p class="li_p">镰鼬</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main117.png" alt="">
+									</a>
+									<p class="li_p">姑获鸟</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main118.png" alt="">
+									</a>
+									<p class="li_p">二口女</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main119.png" alt="">
+									</a>
+									<p class="li_p">白狼</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main122.png" alt="">
+									</a>
+									<p class="li_p">樱花妖</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main123.png" alt="">
+									</a>
+									<p class="li_p">惠比寿</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main125.png" alt="">
+									</a>
+									<p class="li_p">络新妇</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main126.png" alt="">
+									</a>
+									<p class="li_p">般若</p>
+								</li>
+							</ul>
+						</div>
+						<div class="tab_btn clear">
+							<a class="btn_a_fl">
+								<i class="btn_fl_i"></i>
+							</a>
+							<a class="btn_a_fr">
+								<i class="btn__fr_i"></i>
+							</a>
+						</div>
+					</div>
+					<div class="tab_list_box2 tab_ul_box divli">
+						<div class="tab_ul_box tab_ul4 clear">
+							<ul class="tab_list_ul ">
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main32.png" alt="">
+									</a>
+									<p class="li_p">虫师</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main33.png" alt="">
+										
+									</a>
+									<p class="li_p">小袖之手</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main38.png" alt="">
+										
+									</a>
+									<p class="li_p">数珠</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main43.png" alt="">
+										
+									</a>
+									<p class="li_p">兔丸</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main53.png" alt="">
+										
+									</a>
+									<p class="li_p">古笼火</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main62.png" alt="">
+										
+									</a>
+									<p class="li_p">三尾狐</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main64.png" alt="">
+										
+									</a>
+									<p class="li_p">座敷童子</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main65.png" alt="">
+										
+									</a>
+									<p class="li_p">鲤鱼精</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main66.png" alt="">
+										
+									</a>
+									<p class="li_p">九命猫</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main67.png" alt="">
+										
+									</a>
+									<p class="li_p">狸猫</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main68.png" alt="">
+										
+									</a>
+									<p class="li_p">河童</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main71.png" alt="">
+										
+									</a>
+									<p class="li_p">童男</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main72.png" alt="">
+										
+									</a>
+									<p class="li_p">童女	</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main73.png" alt="">
+										
+									</a>
+									<p class="li_p">饿鬼</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main75.png" alt="">
+										
+									</a>
+									<p class="li_p">巫蛊师</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main77.png" alt="">
+										
+									</a>
+									<p class="li_p">鸦天狗</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main92.png" alt="">
+										
+									</a>
+									<p class="li_p">椒图</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main80.png" alt="">
+										
+									</a>
+									<p class="li_p">食发鬼</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main81.png" alt="">
+										
+									</a>
+									<p class="li_p">武士之灵</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main83.png" alt="">
+										
+									</a>
+									<p class="li_p">雨女</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main84.png" alt="">
+										
+									</a>
+									<p class="li_p">跳跳弟弟</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main85.png" alt="">
+										
+									</a>
+									<p class="li_p">跳跳妹妹</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main86.png" alt="">
+										
+									</a>
+									<p class="li_p">兵俑</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main87.png" alt="">
+										
+									</a>
+									<p class="li_p">丑时之女</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main88.png" alt="">
+										
+									</a>
+									<p class="li_p">独眼小僧</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main90.png" alt="">
+										
+									</a>
+									<p class="li_p">铁鼠</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main93.png" alt="">
+										
+									</a>
+									<p class="li_p">管狐</p>
+								</li>
+							</ul>
+							<ul class="tab_list_ul">
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main94.png" alt="">
+									</a>
+									<p class="li_p">山兔</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main95.png" alt="">
+									</a>
+									<p class="li_p">萤草</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main96.png" alt="">
+									</a>
+									<p class="li_p">蝴蝶精</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main98.png" alt="">
+									</a>
+									<p class="li_p">山童</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main99.png" alt="">
+									</a>
+									<p class="li_p">首无</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main104.png" alt="">
+									</a>
+									<p class="li_p">觉</p>
+								</li>
+								<li>
+									<a>
+										<span class="li_span"></span>
+										<img src="images/main_images/main105.png" alt="">
+									</a>
+									<p class="li_p">青蛙瓷器</p>
+								</li>
+							</ul>
+						</div>
+						<div class="tab_btn clear">
+							<a class="btn_a_fl">
+								<i class="btn_fl_i"></i>
+							</a>
+							<a class="btn_a_fr">
+								<i class="btn__fr_i"></i>
+							</a>
+						</div>
+					</div>
+					<div class="tab_ul_box divli">
+						<ul class="tab_list_ul" style="float: left">
+							<li>
+								<a>
+									<span class="li_span"></span>
+									<img src="images/main_images/main63.png" alt="">
+								</a>
+								<p class="li_p">灯笼鬼</p>
+							</li>
+							<li>
+								<a>
+									<span class="li_span"></span>
+									<img src="images/main_images/main100.png" alt="">
+								</a>
+								<p class="li_p">提灯小僧</p>
+							</li>
+							<li>
+								<a>
+									<span class="li_span"></span>
+									<img src="images/main_images/main101.png" alt="">
+								</a>
+								<p class="li_p">赤舌</p>
+							</li>
+							<li>
+								<a>
+									<span class="li_span"></span>
+									<img src="images/main_images/main128.png" alt="">
+								</a>
+								<p class="li_p">盗墓小鬼</p>
+							</li>
+							<li>
+								<a>
+									<span class="li_span"></span>
+									<img src="images/main_images/main129.png" alt="">
+								</a>
+								<p class="li_p">寄生魂</p>
+							</li>
+							<li>
+								<a>
+									<span class="li_span"></span>
+									<img src="images/main_images/main130.png" alt="">
+								</a>
+								<p class="li_p">唐纸伞妖</p>
+							</li>
+							<li>
+								<a>
+									<span class="li_span"></span>
+									<img src="images/main_images/main131.png" alt="">
+								</a>
+								<p class="li_p">天邪鬼绿</p>
+							</li>
+							<li>
+								<a>
+									<span class="li_span"></span>
+									<img src="images/main_images/main132.png" alt="">
+								</a>
+								<p class="li_p">天邪鬼赤</p>
+							</li>
+							<li>
+								<a>
+									<span class="li_span"></span>
+									<img src="images/main_images/main133.png" alt="">
+								</a>
+								<p class="li_p">天邪鬼黄</p>
+							</li>
+							<li>
+								<a>
+									<span class="li_span"></span>
+									<img src="images/main_images/main134.png" alt="">
+								</a>
+								<p class="li_p">天邪鬼青</p>
+							</li>
+							<li>
+								<a>
+									<span class="li_span"></span>
+									<img src="images/main_images/main135.png" alt="">
+								</a>
+								<p class="li_p">帚神</p>
+							</li>
+							<li>
+								<a>
+									<span class="li_span"></span>
+									<img src="images/main_images/main136.png" alt="">
+								</a>
+								<p class="li_p">涂壁</p>
+							</li>
+						</ul>
+					</div>
+					<div class="tab_ul_box divli">
+						<ul class="tab_list_ul" style="float: left">
+							<li>
+								<a>
+									<span class="li_span"></span>
+									<img src="images/main_images/main8.png" alt="">
+								</a>
+								<p class="li_p">彼岸花呱</p>
+							</li>
+							<li>
+								<a>
+									<span class="li_span"></span>
+									<img src="images/main_images/main9.png" alt="">
+								</a>
+								<p class="li_p">荒呱</p>
+							</li>
+							<li>
+								<a>
+									<span class="li_span"></span>
+									<img src="images/main_images/main10.png" alt="">
+								</a>
+								<p class="li_p">辉夜姬呱</p>
+							</li>
+							<li>
+								<a>
+									<span class="li_span"></span>
+									<img src="images/main_images/main11.png" alt="">
+								</a>
+								<p class="li_p">花鸟卷呱</p>
+							</li>
+							<li>
+								<a>
+									<span class="li_span"></span>
+									<img src="images/main_images/main12.png" alt="">
+								</a>
+								<p class="li_p">一目连呱</p>
+							</li>
+							<li>
+								<a>
+									<span class="li_span"></span>
+									<img src="images/main_images/main13.png" alt="">
+								</a>
+								<p class="li_p">妖刀姬呱</p>
+							</li>
+							<li>
+								<a>
+									<span class="li_span"></span>
+									<img src="images/main_images/main14.png" alt="">
+								</a>
+								<p class="li_p">青行灯呱</p>
+							</li>
+							<li>
+								<a>
+									<span class="li_span"></span>
+									<img src="images/main_images/main15.png" alt="">
+								</a>
+								<p class="li_p">茨木呱</p>
+							</li>
+							<li>
+								<a>
+									<span class="li_span"></span>
+									<img src="images/main_images/main16.png" alt="">
+								</a>
+								<p class="li_p">小鹿男呱</p>
+							</li>
+							<li>
+								<a>
+									<span class="li_span"></span>
+									<img src="images/main_images/main17.png" alt="">
+								</a>
+								<p class="li_p">两面佛呱</p>
+							</li>
+							<li>
+								<a>
+									<span class="li_span"></span>
+									<img src="images/main_images/main18.png" alt="">
+								</a>
+								<p class="li_p">阎魔呱</p>
+							</li>
+							<li>
+								<a>
+									<span class="li_span"></span>
+									<img src="images/main_images/main19.png" alt="">
+								</a>
+								<p class="li_p">荒川呱</p>
+							</li>
+							<li>
+								<a>
+									<span class="li_span"></span>
+									<img src="images/main_images/main20.png" alt="">
+								</a>
+								<p class="li_p">酒吞呱</p>
+							</li>
+							<li>
+								<a>
+									<span class="li_span"></span>
+									<img src="images/main_images/main21.png" alt="">
+								</a>
+								<p class="li_p">大天狗呱</p>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!-- 机梗详情页面 -->
+			<div class="tab_nav3">
+				<div class="jigeng divli1">
+					<div class="list">
+						<i class="i"></i>
+						所有式神列表
+					</div>
+					<div class="img">
+						<div class="img_fl">
+							<span class="span1"></span>
+							<p class="p">般若</p>
+							<span class="jt_btn">
+								<i></i>
+							</span>
+						</div>
+						<div class="img_fr">
+							<span class="span1"></span>
+							<p class="p">人面树</p>
+							<span class="jt_btn">
+								<i></i>
+							</span>
+						</div>
+						<!-- 式神录 -->
+						<div class="divlist">
+							<div class="big_img">
+								<a href="" class="big_a">
+									<div class="big_wrap">
+										<img src="images/divlist_images/1(1).png" class="big_fl">
+										<img src="images/divlist_images/1.png" class="big_fr">
+									</div>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="zujiao divli1 jigeng">
+					<div class="zhujue_tabs">
+						<a class="tabs_a">晴明</a>
+						<a>神乐</a>
+						<a>源博雅</a>
+						<a class="last">八百比丘尼</a>
+					</div>
+					<div class="img">
+						<div class="img_fl">
+							<span class="span1"></span>
+							<p class="p">般若</p>
+							<span class="jt_btn">
+								<i></i>
+							</span>
+						</div>
+						<div class="img_fr">
+							<span class="span1"></span>
+							<p class="p">人面树</p>
+							<span class="jt_btn">
+								<i></i>
+							</span>
+						</div>
+						<!-- 式神录 -->
+						<div class="divlist">
+							<div class="big_img">
+								<a href="" class="big_a">
+									<div class="big_wrap">
+										<img src="images/divlist_images/2(2).png" class="big_fl">
+										<img src="images/divlist_images/2.png" class="big_fr">
+									</div>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="sy divli1">
+					<ul class="ul">
+                        <li>安部壮一</li>
+                        <li>安元洋贵</li>
+                        <li>白石凉子</li>
+                        <li>阪口周平</li>
+                        <li>保志总一朗</li>
+                        <li>滨野大辉</li>
+                        <li>茶风林</li>
+                        <li>成田剑</li>
+                        <li>池田海咲</li>
+                        <li>川澄绫子</li>
+                        <li>寸石和弘</li>
+                        <li>佐藤聪美</li>
+					</ul>
+					<ul class="ul">
+                        <li>大泊贵挥</li>
+                        <li>大原沙耶香</li>
+                        <li>代永翼</li>
+                        <li>岛崎信长</li>
+                        <li>钉宫理惠</li>
+                        <li>渡边优里奈</li>
+                        <li>丰崎爱生</li>
+                        <li>福山润</li>
+                        <li>高山南</li>
+                        <li>弓原健史</li>
+                        <li>宮本誉之</li>
+                    </ul>
+                    <ul class="ul">
+                        <li>关俊彦</li>
+                        <li>行成桃姬</li>
+                        <li>河西健吾</li>
+                        <li>户松遥</li>
+                        <li>花江夏树</li>
+                        <li>花泽香菜</li>
+                        <li>吉野裕行</li>
+                        <li>加隈亚衣</li>
+                        <li>甲斐田裕子</li>
+                        <li>间宫康弘</li>
+                        <li>近藤唯</li>
+                    </ul>
+                    <ul class="ul">
+                        <li>井口裕香</li>
+                        <li>井上和彦</li>
+                        <li>井上麻里奈</li>
+                        <li>井泽诗织</li>
+                        <li>君岛哲</li>
+                        <li>堀江由衣</li>
+                        <li>立花慎之介</li>
+                        <li>铃村健一</li>
+                        <li>铃木达央</li>
+                        <li>绿川光</li>
+                        <li>茅野爱衣</li>
+                    </ul>
+                    <ul class="ul">
+                        <li>名冢佳织</li>
+                        <li>内田真礼</li>
+                        <li>能登麻美子</li>
+                        <li>鸟海浩辅</li>
+                        <li>平川大辅</li>
+                        <li>朴璐美</li>
+                        <li>前野智昭</li>
+                        <li>日高里菜</li>
+                        <li>三森铃子</li>
+                        <li>桑岛法子</li>
+                        <li>森久保祥太郎</li>
+                    </ul>
+                    <ul class="ul">
+                        <li>山口胜平</li>
+                        <li>杉山纪彰</li>
+                        <li>杉田智和</li>
+                        <li>上坂堇</li>
+                        <li>石川界人</li>
+                        <li>石田彰</li>
+                        <li>柿原彻也</li>
+                        <li>水濑祈</li>
+                        <li>水树奈奈</li>
+                        <li>松冈祯丞</li>
+                        <li>松井晓波</li>
+                    </ul>
+                    <ul class="ul">
+                        <li>松田健一郎</li>
+                        <li>田村由香里</li>
+                        <li>梶裕贵</li>
+                        <li>西谷修一</li>
+                        <li>喜多村英梨</li>
+                        <li>细谷佳正</li>
+                        <li>小林大纪</li>
+                        <li>小林优</li>
+                        <li>小清水亚美</li>
+                        <li>小西克幸</li>
+                        <li>小野坂昌也</li>
+                    </ul>
+                    <ul class="ul">
+                        <li>新谷真弓</li>
+                        <li>岩崎了</li>
+                        <li>伊藤静</li>
+                        <li>樱井透</li>
+                        <li>樱井孝宏</li>
+                        <li>悠木碧</li>
+                        <li>由加奈</li>
+                        <li>有贺由树子</li>
+                        <li>羽饲真梨</li>
+                        <li>远藤大辅</li>
+                        <li>早见沙织</li>
+                    </ul>
+                    <ul class="ul">
+                        <li>泽城美雪</li>
+                        <li>增田俊树</li>
+                        <li>斋藤千和</li>
+                        <li>中村悠一</li>
+                        <li>中井和哉</li>
+                        <li>种崎敦美</li>
+                        <li>竹达彩奈</li>
+                        <li>竹内顺子</li>
+                        <li>子安武人</li>
+                        <li>诹访彩花</li>
+                        <li>佐仓绫音</li>
+                    </ul>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+	<!-- 游戏功略 -->
+	<div class="game bx">
+		<div class="game_top clear">
+			<a href="" class="logo_a"></a>
+			<div class="game_img">
+				<ul class="clear">
+					<li>
+						<a href="">
+							<span>
+								<b>逢魔进阶</b>
+							</span>
+							<span class="span2">
+								<b>蜃气楼</b>
+							</span>
+							<img src="images/game_images/img1.jpg" alt="" class="img">
+						</a>
+					</li>
+					<li>
+						<a href="">
+							<span>
+								<b>浮梦花烛</b>
+							</span>
+							<span class="span2">
+								<b>秘闻副本</b>
+							</span>
+							<img src="images/game_images/img2.jpg" alt="" class="img">
+						</a>
+					</li>
+					<li>
+						<a href="">
+							<span>
+								<b>妖气副本</b>
+							</span>
+							<span class="span2">
+								<b>悬赏封印</b>
+							</span>
+							<img src="images/game_images/img3.jpg" alt="" class="img">
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="game_nav">
+			<div class="nav_tab">
+				<ul class="clear ul3">
+					<li>
+						<a>
+							萌新上路
+							<i></i>
+						</a>
+					</li>
+					<li>
+						<a>
+							式神御魂
+							<i></i>
+						</a>
+					</li>
+					<li>
+						<a>
+							秘闻副本
+							<i></i>
+						</a>
+					</li>
+					<li>
+						<a>
+							斗技阵容
+							<i></i>
+						</a>
+					</li>
+				</ul>
+				<div class="zhengji">
+					有奖攻略征集
+				</div>
+			</div>
+		</div>
+		<div class="game_ul">
+			<div class="game_main">
+				<ul class="select">
+					<li>
+						<a href="" class="clear">
+							<div class="main_fl fl">
+								<i></i>
+							</div>
+							<div class="main_fr fl">
+								<p>【新手】第四期！ 御魂从哪来？躺魂十的各种姿势！</p>
+								<span>作者：Yeno1996</span>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="" class="clear">
+							<div class="main_fl fl">
+								<i></i>
+							</div>
+							<div class="main_fr fl">
+								<p>【新手】特别篇~大将：呱世无双的正确入手攻略~</p>
+								<span>作者：Yeno1996</span>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="" class="clear">
+							<div class="main_fl fl">
+								<i></i>
+							</div>
+							<div class="main_fr fl">
+								<p>【新手】第三期 你们应该强化的御魂是这样滴~</p>
+								<span>作者：Yeno1996</span>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="" class="clear">
+							<div class="main_fl fl">
+								<i></i>
+							</div>
+							<div class="main_fr fl">
+								<p>【新手】第二期 狗粮队长全解析！养这些！不吃亏～</p>
+								<span>作者：Yeno1996</span>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="" class="clear">
+							<div class="main_fl fl">
+								<i></i>
+							</div>
+							<div class="main_fr fl">
+								<p>【新手】第一期 省达摩、省金币、省勾玉！</p>
+								<span>作者：Yeno1996</span>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="" class="clear">
+							<div class="main_fl fl">
+								<i></i>
+							</div>
+							<div class="main_fr fl">
+								<p>【新手】简单清晰的结界卡合成方法</p>
+								<span>作者：燃玉</span>
+							</div>
+						</a>
+					</li>
+				</ul>
+				<ul>
+					<li>
+						<a href="" class="clear">
+							<div class="main_fl fl">
+								<i></i>
+							</div>
+							<div class="main_fr fl">
+								<p>【式神】防御机制与人面树测试报告</p>
+								<span>作者：木子南</span>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="" class="clear">
+							<div class="main_fl fl">
+								<i></i>
+							</div>
+							<div class="main_fr fl">
+								<p>【式神】白藏主机制及正确使用指南</p>
+								<span>作者：木子南</span>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="" class="clear">
+							<div class="main_fl fl">
+								<i></i>
+							</div>
+							<div class="main_fr fl">
+								<p>【式神】阴阳天机谱 | 幼羽缠风，崇天无畏山高远</p>
+								<span>作者：鸽海成路</span>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="" class="clear">
+							<div class="main_fl fl">
+								<i></i>
+							</div>
+							<div class="main_fr fl">
+								<p>【式神】鸩：我们来体验一哈真正的快乐！</p>
+								<span>作者：Yeno1996</span>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="" class="clear">
+							<div class="main_fl fl">
+								<i></i>
+							</div>
+							<div class="main_fr fl">
+								<p>【式神】彼岸花“黄泉彼岸”通关全攻略详解！</p>
+								<span>作者：清逸喵</span>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="" class="clear">
+							<div class="main_fl fl">
+								<i></i>
+							</div>
+							<div class="main_fr fl">
+								<p>【式神】KAGOME — 如何正确使用 阴阳师史上最用心式神-犬夜叉</p>
+								<span>作者：长街风</span>
+							</div>
+						</a>
+					</li>
+				</ul>
+				<ul>
+					<li>
+						<a href="" class="clear">
+							<div class="main_fl fl">
+								<i></i>
+							</div>
+							<div class="main_fr fl">
+								<p>【玩法】新人的地狱鬼王攻略</p>
+								<span>作者：木子南</span>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="" class="clear">
+							<div class="main_fl fl">
+								<i></i>
+							</div>
+							<div class="main_fr fl">
+								<p>【玩法】休闲玩家进阶之夺得荒骷髅最高成就</p>
+								<span>作者：西城男孩</span>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="" class="clear">
+							<div class="main_fl fl">
+								<i></i>
+							</div>
+							<div class="main_fr fl">
+								<p>【玩法】周年庆视觉更新！活动先览！（20180912体服速报）</p>
+								<span>作者：Yeno1996</span>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="" class="clear">
+							<div class="main_fl fl">
+								<i></i>
+							</div>
+							<div class="main_fr fl">
+								<p>【玩法】休闲玩家进阶之夺得蜃气楼最高成就</p>
+								<span>作者：西城男孩</span>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="" class="clear">
+							<div class="main_fl fl">
+								<i></i>
+							</div>
+							<div class="main_fr fl">
+								<p>【玩法】休闲玩家进阶之拿到胧车大将的正确姿势</p>
+								<span>作者：西城男孩</span>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="" class="clear">
+							<div class="main_fl fl">
+								<i></i>
+							</div>
+							<div class="main_fr fl">
+								<p>【玩法】逢魔之时需要知道的一些小知识（上篇）</p>
+								<span>作者：Yeno1996</span>
+							</div>
+						</a>
+					</li>
+				</ul>
+				<ul>
+					<li>
+						<a href="" class="clear">
+							<div class="main_fl fl">
+								<i></i>
+							</div>
+							<div class="main_fr fl">
+								<p>【斗技】【翻牌攻略】斗技先手流（上篇）</p>
+								<span>作者：木子南</span>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="" class="clear">
+							<div class="main_fl fl">
+								<i></i>
+							</div>
+							<div class="main_fr fl">
+								<p>【斗技】为崽而战课堂：大佬来看看这里有没有你常用的斗技阵容</p>
+								<span>作者：Yeno1996</span>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="" class="clear">
+							<div class="main_fl fl">
+								<i></i>
+							</div>
+							<div class="main_fr fl">
+								<p>【斗技】为崽而战小课堂：兵俑雪女凤凰火，那个是神级控？</p>
+								<span>作者：Yeno1996</span>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="" class="clear">
+							<div class="main_fl fl">
+								<i></i>
+							</div>
+							<div class="main_fr fl">
+								<p>【斗技】为崽而战小课堂：那些至今活跃在斗技场上的R卡</p>
+								<span>作者：Yeno1996</span>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="" class="clear">
+							<div class="main_fl fl">
+								<i></i>
+							</div>
+							<div class="main_fr fl">
+								<p>【斗技】为崽而战小课堂：关于那些奶妈的故事！</p>
+								<span>作者：Yeno1996</span>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="" class="clear">
+							<div class="main_fl fl">
+								<i></i>
+							</div>
+							<div class="main_fr fl">
+								<p>【斗技】安利一波犬神，3000分阿黄分斗花心得</p>
+								<span>作者：草爷</span>
+							</div>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<!-- 同人手账 -->
+	<div class="fan bx">
+		<a href="" title="" class="fan_a"></a>
+		<div class="fan_fl">
+			<div class="fl_box">
+				<div class="box_top">
+					<div class="box_tit">
+					</div>
+					<div class="box_num">
+						<span class="spanColor"></span>
+						<span></span>
+						<span></span>
+					</div>
+				</div>
+				<div class="box_bb">
+					<a href="" class="show"><img src="images/fan_images/1.png" alt=""></a>
+					<a href=""><img src="images/fan_images/2.png" alt=""></a>
+					<a href=""><img src="images/fan_images/3.png" alt=""></a>
+				</div>
+			</div>
+		</div>
+		<div class="fan_fr">
+			<div class="fan_nav">
+				<div class="nav_fr">
+				</div>
+				<ul class="ul1">
+					<li><a href="">#万圣节#</a></li>
+					<li><a href="">#桔梗#</a></li>
+					<li><a href="">#嘉年华庆典#</a></li>
+					<li><a href="">#小白#</a></li>
+					<li><a href="">#小晴明#</a></li>
+				</ul>
+				<div class="fan_bot">
+					<ul class="fan_ul1">
+						<li>
+							<a href="">
+								<div class="ul1_img">
+									<img src="images/fan_images/c2.jpg" alt="">
+									<img src="images/fan_images/c3.jpg" alt="">
+									<img src="images/fan_images/c1.jpg" alt="">
+								</div>
+							</a>
+						</li>
+						<li>
+							<a href="">
+								<div class="ul1_img">
+									<img src="images/fan_images/c4.jpg" alt="">
+								</div>
+								<div class="fan_txt">
+									<p class="fan_p1">面灵气 cos</p>
+									<p class="fan_p2">作者：白菜鸽鸽</p>
+								</div>
+								<p class="fan_P"></p>
+							</a>
+						</li>
+						<li>
+							<a href="">
+								<div class="ul1_img">
+									<img src="images/fan_images/c5.jpg" alt="">
+								</div>
+								<div class="fan_txt">
+									<p class="fan_p1">面灵气 cos</p>
+									<p class="fan_p2">作者:白菜鸽鸽</p>
+								</div>
+								<p class="fan_P"></p>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="fan2 bx">
+		<div class="fan2_head">
+			<img src="images/fan2_images/fan2_head1.png" alt="">
+			<span class="fan2_line"></span>
+			<img src="images/fan2_images/fan2_head2.png" alt="">
+			<a href="" class="fan2_headA">阴阳师手游同人帐 </a>
+		</div>
+		<div class="fan2_foot">
+			<div class="fan2_img">
+				<ul class="fan2_ul">
+					<li>
+						<a href="" style="display: block;">
+							<div class="img_head">
+								<img src="images/fan2_images/li_img2.jpg" alt="">
+							</div>
+							<div class="img_head_bj"></div>
+							<div class="fan2_txt">第五橙-</div>
+						</a>
+					</li>
+					<li>
+						<a href="" style="display: block;">
+							<div class="img_head">
+								<img src="images/fan2_images/li_img3.jpg" alt="">
+							</div>
+							<div class="img_head_bj"></div>
+							<div class="fan2_txt">会飞的荷子</div>
+						</a>
+					</li>
+					<li>
+						<a href="" style="display: block;">
+							<div class="img_head">
+								<img src="images/fan2_images/li_img1.png" alt="">
+							</div>
+							<div class="img_head_bj"></div>
+							<div class="fan2_txt">渡渔</div>
+						</a>
+					</li>
+					<li>
+						<a href="" style="display: block;">
+							<div class="img_head">
+								<img src="images/fan2_images/li_img4.jpg" alt="">
+							</div>
+							<div class="img_head_bj"></div>
+							<div class="fan2_txt">会飞的荷子</div>
+						</a>
+					</li>
+					<li style="margin: 0;">
+						<a href="" style="display: block;">
+							<div class="img_head">
+								<img src="images/fan2_images/li_img5.jpg" alt="">
+							</div>
+							<div class="img_head_bj"></div>
+							<div class="fan2_txt">与月MOON</div>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<!-- 视听盛宴 -->
+	<div class="fan3 bx">
+		<a class="fan3_a"></a>
+		<div class="fan3_box">
+			<ul class="fan3_ul">
+				<li>
+					<a href="#">
+						<img src="images/fan3_images/fan3_img1.gif">
+						<div class="fan3_txt">
+							<i></i>
+							刀鸣散华，利刃登场
+						</div>
+					</a>
+				</li>
+				<li>
+					<a href="#">
+						<img src="images/fan3_images/fan3_img2.png">
+						<div class="fan3_txt">
+							<i></i>
+							少羽大天狗
+						</div>
+					</a>
+				</li>
+				<li>
+					<a href="#">
+						<img src="images/fan3_images/fan3_img3.gif">
+						<div class="fan3_txt">
+							<i></i>
+							最初的守护
+						</div>
+					</a>
+				</li>
+				<li class="lastli">
+					<a href="#">
+						<img src="images/fan3_images/fan3_img4.png">
+						<div class="fan3_txt">
+							<i></i>
+							小白与晴明
+						</div>
+					</a>
+				</li>
+			</ul>
+			<a href="#" class="fan3_a1">
+				更多内容
+				<i class="i"></i>
+			</a>
+		</div>
+	</div>
+	<!-- 泛娱乐 -->
+	<div class="fan4 bx">
+		<div class="fan4_fl">
+			<a></a>
+		</div>
+		<div class="fan4_fr">
+			<div class="fan4_box">
+				<ul class="fan4_ul">
+					<li>
+						<a href="#">
+							<img src="images/fan4_images/li1.gif" alt="">
+						</a>
+					</li>
+					<li>
+						<a href="#">
+							<img src="images/fan4_images/li2.png" alt="">
+						</a>
+					</li>
+					<li>
+						<a href="#">
+							<img src="images/fan4_images/li3.png" alt="">
+						</a>
+					</li>
+					<li>
+						<a href="#">
+							<img src="images/fan4_images/li4.png" alt="">
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<!-- 京东商业街 -->
+	<div class="shop bx">
+		<a class="shop_a"></a>
+		<div class="shop_box">
+			<ul class="shop_ul">
+				<li>
+					<a href="">
+						<div class="shop_li1">
+							<img src="images/shop_images/shop_li1.jpg" alt="">
+						</div>
+						<div class="shop_line"></div>
+						<p>阴阳师达摩印章</p>
+					</a>
+				</li>
+				<li>
+					<a href="">
+						<div class="shop_li1">
+							<img src="images/shop_images/shop_li2.jpg" alt="">
+						</div>
+						<div class="shop_line"></div>
+						<p>阴阳师式神纸筒人</p>
+					</a>
+				</li>
+				<li>
+					<a href="">
+						<div class="shop_li1">
+							<img src="images/shop_images/shop_li3.jpg" alt="">
+						</div>
+						<div class="shop_line"></div>
+						<p>达摩黄金转运珠</p>
+					</a>
+				</li>
+				<li class="shop_last">
+					<a href="">
+						<div class="shop_li1">
+							<img src="images/shop_images/shop_li4.jpg" alt="">
+						</div>
+						<div class="shop_line"></div>
+						<p>茨球公仔（大）</p>
+					</a>
+				</li>
+			</ul>
+			<div class="shop_end">
+			</div>
+		</div>	
+		<div class="shop_hr">
+			<div class="shop_line"></div>
+			<div class="shop_btn">
+				拖动
+				<span>
+					<i></i>
+					<i></i>
+					<i></i>
+				</span>
+			</div>
+		</div>
+	</div>
+	<!-- Qrcode二维码 -->
+	<div class="Qrcode bx">
+		<div class="Qrcode_bj">
+			<div class="code">
+				<div class="code_top">
+					<a>
+						<p class="p1">关注官方微博</p>
+						<p class="p2">扫描二维码</p>
+						<span class="top_span"></span>
+						<img src="images/Qrcode_images/1.jpg" alt="">
+					</a>
+				</div>
+				<p class="p">
+					官方微博：
+					<span class="p_span">网易阴阳师手游</span>
+				</p>
+			</div>
+			<div class="code code2">
+				<div class="code_top">
+					<a>
+						<p class="p1">关注官方微博</p>
+						<p class="p2">扫描二维码</p>
+						<span class="top_span"></span>
+						<img src="images/Qrcode_images/1.jpg" alt="">
+					</a>
+				</div>
+				<p class="p">
+					官方微博：
+					<span class="p_span">网易阴阳师手游</span>
+				</p>
+			</div>
+			<div class="code code_center">
+				<a></a>
+			</div>
+			<div class="code code3">
+				<div class="code_top">
+					<a>
+						<p class="p1">精灵咨询</p>
+						<p class="p2">问题反馈</p>
+						<span class="top_span"></span>
+						<img src="images/Qrcode_images/3.png" class="img1">
+					</a>
+				</div>
+				<p class="p">
+					客服电话：
+					<span class="p_span">95163919</span>
+				</p>
+			</div>
+			<div class="code code4">
+				<div class="code_top">
+					<a>
+						<p class="p1">和大神一起玩</p>
+						<p class="p2">扫描二维码</p>
+						<span class="top_span"></span>
+						<img src="images/Qrcode_images/2.jpg" alt="">
+					</a>
+				</div>
+				<p class="p">
+					大神号：
+					<span class="p_span">网易阴阳师手游</span>
+				</p>
+			</div>
+		</div>
+	</div>
+	<!-- footer底部 -->
+	<div class="footer">
+		<div class="footer_top">
+			<div class="footer_logo"></div>
+			<div class="footer_r">
+				<div class="footer_box">
+					<div class="footer_li1"></div>
+					<div class="footer_li2"></div>
+					<div class="footer_li3"></div>
+					<div class="footer_li4"></div>
+					<div class="footer_li5"></div>
+					<div class="footer_con">
+						<div class="div">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="footer_bot">
+			<div class="share">
+				<div class="share_top clear">
+					<div class="share_box">
+						<a><img src="images/footer_images/img1.png" alt=""></a>
+						<a><img src="images/footer_images/img2.png" alt=""></a>
+						<a><img src="images/footer_images/img3.png" alt=""></a>
+						<a><img src="images/footer_images/img4.png" alt=""></a>
+					</div>
+					<div class="share_fr">
+						<div class="nav_head">
+							<a>公司简介</a>
+							-
+							<a>客户服务</a>
+							-
+							<a>相关法律</a>
+							-
+							<a>网易游戏</a>
+							-
+							<a>联系我们</a>
+							-
+							<a>商务合作</a>
+							-
+							<a>加入我们</a>
+							-
+							<a>公司简介</a>
+							-
+							<a>用户协议</a>
+						</div>
+						<p class="p">网易公司版权所有 ©1997-2018 <a href="#">点击查看家长监护工程 > </a></p>
+					</div>
+				</div>
+				<div class="p_box">
+					<p>本游戏适合16岁以上的玩家进入。</p>
+					<p>积极健康的游戏心态是健康游戏的开端，本游戏故事情节设置紧凑，请您合理控制游戏时间，避免沉溺游戏影响生活，注意自我保护，防范网络陷阱。</p>
+					<a href="#">《网络游戏管理暂行办法》</a>
+					<span>文网游备字【2016】M-RPG4708号</span>
+					<span>《网络文化经营许可证》</span>
+					<span>浙网文[2016]0155-055号</span>
+					<span>批准文号：新广出审【2017】6710号</span>
+					<span>出版物号：ISBN 978-7-7979-9973-1</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
